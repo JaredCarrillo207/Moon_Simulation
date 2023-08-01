@@ -31447,6 +31447,7 @@ GameObject:
   - component: {fileID: 1447134339}
   - component: {fileID: 1447134340}
   - component: {fileID: 1447134341}
+  - component: {fileID: 1447134342}
   m_Layer: 0
   m_Name: SpeechHandler
   m_TagString: Untagged
@@ -31600,13 +31601,29 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1447134336}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ceac6340b47b814e9c2534a44e350dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverIP: 192.168.50.251
-  serverPort: 55555
+  host: 192.168.50.251
+  port: 55555
+  bufferSize: 32
+--- !u!114 &1447134342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1447134336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 042d7e414b9fe83479d5dae58f3348a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  host: 127.0.0.1
+  port: 55555
+  bufferSize: 1024
 --- !u!1 &1455918179
 GameObject:
   m_ObjectHideFlags: 0
