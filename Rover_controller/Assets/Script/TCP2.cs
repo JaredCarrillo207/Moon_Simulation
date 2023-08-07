@@ -1,103 +1,117 @@
-
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using System.Collections;
 using UnityEngine;
+using System.IO;
 
 public class TCP2 : MonoBehaviour
 {
-    public string host = "127.0.0.1";
-    public int port = 55555;
-    public int bufferSize = 1024;
+    private const string HOST = "127.0.0.1";
+    private const int PORT = 55555;
+    private const int BUFFER_SIZE = 1024;
 
-    private TcpClient client;
-    private NetworkStream stream;
-    private byte[] receiveBuffer;
+    private bool end = false;
 
     private void Start()
     {
-        try
+        Thread serverThread = new Thread(StartServer);
+        serverThread.Start();
+
+        // In Unity, you generally don't want to use an empty while loop like this.
+        // Consider implementing the necessary logic in Update() method instead.
+        while (!end)
         {
-            client = new TcpClient(host, port);
-            stream = client.GetStream();
-            receiveBuffer = new byte[bufferSize];
-            stream.BeginRead(receiveBuffer, 0, bufferSize, ReceiveCallback, null);
+            // Implement your custom logic here or use the Update() method.
         }
-        catch (Exception e)
-        {
-            Debug.LogError($"Error connecting to the server: {e}");
-        }
+        serverThread.Join();
     }
 
-    private void ReceiveCallback(IAsyncResult ar)
+    private void StartServer()
     {
+        TcpListener serverSocket = null;
+        List<TcpClient> clientSockets = new List<TcpClient>();
+
         try
         {
-            int bytesRead = stream.EndRead(ar);
-            if (bytesRead > 0)
+            IPAddress ipAddress = IPAddress.Parse(HOST);
+            serverSocket = new TcpListener(ipAddress, PORT);
+            serverSocket.Start();
+            serverSocket.Server.ReceiveTimeout = 10000; // 10 seconds timeout
+
+            Debug.Log($"Server listening on {HOST}:{PORT}");
+
+            while (!end)
             {
-                byte[] data = new byte[bytesRead];
-                Array.Copy(receiveBuffer, data, bytesRead);
-                string receivedMessage = System.Text.Encoding.UTF8.GetString(data);
-                Debug.Log($"Received data from server: {receivedMessage}");
+                try
+                {
+                    TcpClient clientSocket = serverSocket.AcceptTcpClient();
+                    clientSocket.ReceiveTimeout = 10000; // 10 seconds timeout
+                    clientSockets.Add(clientSocket);
 
-                // Call a method to handle the received data
-                HandleReceivedData(receivedMessage);
+                    Debug.Log($"New connection from {clientSocket.Client.RemoteEndPoint}");
+                }
+                catch (SocketException)
+                {
+                    // Handle exceptions or other logic as needed.
+                }
 
-                stream.BeginRead(receiveBuffer, 0, bufferSize, ReceiveCallback, null);
+                List<TcpClient> tempSockets = new List<TcpClient>(clientSockets);
+
+                foreach (TcpClient clientSocket in tempSockets)
+                {
+                    try
+                    {
+                        NetworkStream networkStream = clientSocket.GetStream();
+                        byte[] buffer = new byte[BUFFER_SIZE];
+                        int bytesRead = networkStream.Read(buffer, 0, buffer.Length);
+
+                        if (bytesRead > 0)
+                        {
+                            float[] receivedData = new float[7]; // Assuming 7 floats in the received data
+                            Buffer.BlockCopy(buffer, 0, receivedData, 0, bytesRead);
+
+                            Debug.Log($"Received data from {clientSocket.Client.RemoteEndPoint}: {string.Join(", ", receivedData)}");
+
+                            string response = "done deal in dundee";
+                            byte[] responseBytes = Encoding.UTF8.GetBytes(response);
+                            networkStream.Write(responseBytes, 0, responseBytes.Length);
+                        }
+                        else
+                        {
+                            Debug.Log($"Client {clientSocket.Client.RemoteEndPoint} disconnected.");
+                            clientSocket.Close();
+                            clientSockets.Remove(clientSocket);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.Log($"Error receiving data from {clientSocket.Client.RemoteEndPoint}: {ex}");
+                        clientSocket.Close();
+                        clientSockets.Remove(clientSocket);
+                    }
+                }
             }
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Debug.LogError($"Error receiving data from the server: {e}");
-            CloseConnection();
+            Debug.Log($"Exception in StartServer: {ex}");
         }
-    }
-
-    private void HandleReceivedData(string receivedData)
-    {
-
-
-        // Example parsing (assuming the format is "elapsed_time,x,y,z,rot0,rot1,rot2,rot3"):
-        string[] values = receivedData.Split(',');
-        if (values.Length == 8)
+        finally
         {
-            float elapsedTime = float.Parse(values[0]);
-            float x = float.Parse(values[1]);
-            float y = float.Parse(values[2]);
-            float z = float.Parse(values[3]);
-            float rot0 = float.Parse(values[4]);
-            float rot1 = float.Parse(values[5]);
-            float rot2 = float.Parse(values[6]);
-            float rot3 = float.Parse(values[7]);
+            if (serverSocket != null)
+            {
+                serverSocket.Stop();
+            }
 
-            // Use the parsed values as needed.
-            // For example, you can log them to the Unity debug console:
-            Debug.Log($"Elapsed Time: {elapsedTime}, Position: ({x}, {y}, {z}), Rotation: ({rot0}, {rot1}, {rot2}, {rot3})");
+            foreach (TcpClient clientSocket in clientSockets)
+            {
+                clientSocket.Close();
+            }
+            clientSockets.Clear();
         }
-        else
-        {
-            Debug.LogError("Received data is not in the expected format.");
-        }
-    }
-
-    private void CloseConnection()
-    {
-        if (stream != null)
-        {
-            stream.Close();
-            stream = null;
-        }
-
-        if (client != null)
-        {
-            client.Close();
-            client = null;
-        }
-    }
-
-    private void OnApplicationQuit()
-    {
-        CloseConnection();
     }
 }

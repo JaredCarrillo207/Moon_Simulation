@@ -52,14 +52,14 @@ MonoBehaviour:
       description: None
       axisConstraint: 0
   - localizationKey: 
-    keyword: Follow Rover 1
+    keyword: Follow Alpha
     keyCode: 0
     action:
       id: 0
       description: None
       axisConstraint: 0
   - localizationKey: 
-    keyword: Follow Rover 2
+    keyword: Follow Bee
     keyCode: 0
     action:
       id: 0
@@ -102,6 +102,20 @@ MonoBehaviour:
       axisConstraint: 0
   - localizationKey: 
     keyword: Hide hand menu
+    keyCode: 0
+    action:
+      id: 0
+      description: None
+      axisConstraint: 0
+  - localizationKey: 
+    keyword: Follow C 2
+    keyCode: 0
+    action:
+      id: 0
+      description: None
+      axisConstraint: 0
+  - localizationKey: 
+    keyword: Follow Viper
     keyCode: 0
     action:
       id: 0

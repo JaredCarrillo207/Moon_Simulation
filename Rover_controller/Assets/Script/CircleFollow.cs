@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CircleFollow : MonoBehaviour
 {
-    public Transform roverOne, roverTwo; // Reference to the game object you want to copy
+    public Transform roverOne, roverTwo, roverThree, roverViper; // Reference to the game object you want to copy
 
     private Transform objectFocus;
 
@@ -12,9 +12,9 @@ public class CircleFollow : MonoBehaviour
 
     public Material dissolveMaterial, rockDissolve, wheelDissolve, chassisDissolve, moonDissolve; // Assign the material using the "Custom/CenterOnlyShader" shader in the Inspector
 
-    public GameObject Rover1Card, Rover2Card, worldScale, baseScale, moonButton, objectToRotate;
-    public float dissolveInterpolation = 0.0f;
-    public float dissolveInterpolation2 = 50.0f;
+    public GameObject Rover1Card, Rover2Card, Rover3Card, Rover4Card, worldScale, baseScale, moonButton, objectToRotate;
+    public float dissolveInterpolation = 0.02f;
+    public float dissolveInterpolation2 = 1.0f;
     public float interpolationDuration = 1.0f;
     public float interpolationDuration2 = 5.0f;
     public float targetInterpolation;
@@ -22,7 +22,8 @@ public class CircleFollow : MonoBehaviour
 
 
     public Vector3 zoomInScale = new Vector3(1f, 1f, 1f);
-    public Vector3 zoomOutScale = new Vector3(0.5f, 0.5f, 0.5f);// Set the target scale you want to reach.
+    public Vector3 zoomOutScale = new Vector3(0.1f, 0.1f, 0.1f);// Set the target scale you want to reach.
+    public Vector3 zoomOutOutScale = new Vector3(0.02f, 0.02f, 0.02f);// Set the target scale you want to reach.
 
     public Vector3 zoomBaseInScale = new Vector3(1.04f, 0.03f, 1.04f);
     public Vector3 zoomBaseOutScale = new Vector3(3.0f, 0.03f, 3.0f);
@@ -36,6 +37,7 @@ public class CircleFollow : MonoBehaviour
     private Vector3 initialScale2;
     private Vector3 initialScale3;
     private Vector3 initialScale4;
+    private Vector3 initialScale5;
     private Coroutine scalingCoroutine;
 
 
@@ -50,9 +52,9 @@ public class CircleFollow : MonoBehaviour
     {
         moonDissolve.SetFloat("_Interpolation", 15f);
 
-        //worldScale.transform.localScale = new Vector3(1f, 1f, 1f);
+        //worldScale.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
 
-        dissolveInterpolation = 0.0f;
+        dissolveInterpolation = 0.02f;
 
         targetInterpolation = dissolveInterpolation;
         targetInterpolation2 = dissolveInterpolation2;
@@ -60,6 +62,8 @@ public class CircleFollow : MonoBehaviour
         objectFocus = roverOne;
 
         Rover2Card.SetActive(false);
+        Rover3Card.SetActive(false);
+        Rover4Card.SetActive(false);
         // Check if the target object is assigned
         if (objectFocus != null)
         {
@@ -197,6 +201,20 @@ public class CircleFollow : MonoBehaviour
         baseScale.transform.localScale = zoomBaseOutScale; // To ensure it reaches the exact target scale.
     }
 
+    private IEnumerator ScaleObjectGradually5()
+    {
+
+        float t = 0f;
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime * scalingSpeed;
+            worldScale.transform.localScale = Vector3.Lerp(initialScale5, zoomOutOutScale, t);
+            yield return null;
+        }
+
+        worldScale.transform.localScale = zoomOutOutScale; // To ensure it reaches the exact target scale.
+    }
 
 
 
@@ -287,20 +305,45 @@ public class CircleFollow : MonoBehaviour
 
     public void followRover1()
     {
-
+        worldScale.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         StartCoroutine(ChangeTargetGradually(roverOne));
         Rover1Card.SetActive(true);
         Rover2Card.SetActive(false);
+        Rover3Card.SetActive(false);
+        Rover4Card.SetActive(false);
 
     }
 
     public void followRover2()
     {
-
+        worldScale.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         StartCoroutine(ChangeTargetGradually(roverTwo));
         Rover1Card.SetActive(false);
         Rover2Card.SetActive(true);
+        Rover3Card.SetActive(false);
+        Rover4Card.SetActive(false);
     }
+
+    public void followRover3()
+    {
+        worldScale.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        StartCoroutine(ChangeTargetGradually(roverThree));
+        Rover1Card.SetActive(false);
+        Rover2Card.SetActive(false);
+        Rover3Card.SetActive(true);
+        Rover4Card.SetActive(false);
+    }
+
+    public void followViper()
+    {
+        worldScale.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+        StartCoroutine(ChangeTargetGradually(roverViper));
+        Rover1Card.SetActive(false);
+        Rover2Card.SetActive(false);
+        Rover3Card.SetActive(false);
+        Rover4Card.SetActive(true);
+    }
+
 
     public void scale10()
     {
@@ -318,15 +361,30 @@ public class CircleFollow : MonoBehaviour
 
     public void zoomIn()
     {
-
-        initialScale = worldScale.transform.localScale;
-        scalingCoroutine = StartCoroutine(ScaleObjectGradually());
+        if(objectFocus != roverViper)
+        {
+            initialScale = worldScale.transform.localScale;
+            scalingCoroutine = StartCoroutine(ScaleObjectGradually());
+        }
+        else
+        {
+            initialScale2 = worldScale.transform.localScale;
+            scalingCoroutine = StartCoroutine(ScaleObjectGradually2());
+        }
     }
 
     public void zoomOut()
     {
-        initialScale2 = worldScale.transform.localScale;
-        scalingCoroutine = StartCoroutine(ScaleObjectGradually2());
+        if (objectFocus != roverViper)
+        {
+            initialScale2 = worldScale.transform.localScale;
+            scalingCoroutine = StartCoroutine(ScaleObjectGradually2());
+        }
+        else
+        {
+            initialScale5 = worldScale.transform.localScale;
+            scalingCoroutine = StartCoroutine(ScaleObjectGradually5());
+        }
         //worldScale.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
     }
 
@@ -366,6 +424,14 @@ public class CircleFollow : MonoBehaviour
             followRover2();
         }
         if (objectFocus == roverTwo)
+        {
+            followRover3();
+        }
+        if (objectFocus == roverThree)
+        {
+            followViper();
+        }
+        if (objectFocus == roverViper)
         {
             followRover1();
         }

@@ -33,7 +33,7 @@ public class Rotator : MonoBehaviour
         if (shouldRotate)
         {
             // Rotate the object around its local Z-axis continuously based on the rotationSpeed variable.
-            transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime, Space.Self);
+            transform.Rotate(-rotationSpeed * Time.deltaTime, 0f, 0f, Space.Self);
         }
 
         // Update the previous position for the next frame

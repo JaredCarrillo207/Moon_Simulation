@@ -8,7 +8,7 @@
 		[Gamma]  _Metallic ("Metallic", Range(0.000000,1.000000)) = 0.000000
 		_Center("Dissolve Center", Vector) = (0,0,0,0)
 		_Distance("Dissolve Distance", Float) = 1
-		_Interpolation("Dissolve Interpolation", Range(0,50)) = 1
+		_Interpolation("Dissolve Interpolation", Range(0,70)) = 1
 		_DissTexture("Dissolve Texture", 2D) = "white" {}
 		[HDR]_DissolveColor("Dissolve Color", Color) = (0,1,0,1)
 
