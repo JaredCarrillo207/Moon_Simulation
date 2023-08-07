@@ -10,9 +10,9 @@ public class CircleFollow : MonoBehaviour
 
     private Vector3 lastLocalPosition; // Local position of the target object in the previous frame
 
-    public Material dissolveMaterial, rockDissolve, wheelDissolve, chassisDissolve, moonDissolve; // Assign the material using the "Custom/CenterOnlyShader" shader in the Inspector
+    public Material dissolveMaterial, rockDissolve, wheelDissolve, chassisDissolve; // Assign the material using the "Custom/CenterOnlyShader" shader in the Inspector
 
-    public GameObject Rover1Card, Rover2Card, Rover3Card, Rover4Card, worldScale, baseScale, moonButton, objectToRotate;
+    public GameObject Rover1Card, Rover2Card, Rover3Card, Rover4Card, worldScale, baseScale, objectToRotate;
     public float dissolveInterpolation = 0.02f;
     public float dissolveInterpolation2 = 1.0f;
     public float interpolationDuration = 1.0f;
@@ -28,7 +28,6 @@ public class CircleFollow : MonoBehaviour
     public Vector3 zoomBaseInScale = new Vector3(1.04f, 0.03f, 1.04f);
     public Vector3 zoomBaseOutScale = new Vector3(3.0f, 0.03f, 3.0f);
 
-    private float duration = 3f;
 
 
     public float scalingSpeed = 1f;
@@ -43,14 +42,12 @@ public class CircleFollow : MonoBehaviour
 
     public float followSpeed = 0.1f; // Adjust this to control the speed of interpolation
 
-    public GameObject openingSound;
 
 
 
 
     void Start()
     {
-        moonDissolve.SetFloat("_Interpolation", 15f);
 
         //worldScale.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
 
@@ -267,42 +264,6 @@ public class CircleFollow : MonoBehaviour
 
 
 
-
-    private IEnumerator InterpolateDissolveMoon()
-    {
-        float startTime = Time.time;
-        float elapsedTime = 0f;
-
-        // Get the starting value of _Interpolation
-        float startInterpolation = moonDissolve.GetFloat("_Interpolation");
-
-        while (elapsedTime < duration)
-        {
-            // Calculate the progress of interpolation from 0 to 1
-            float t = elapsedTime / duration;
-
-            // Use Mathf.Lerp to smoothly interpolate the value from startInterpolation to 0
-            float currentInterpolation = Mathf.Lerp(startInterpolation, 0f, t);
-
-            // Set the new _Interpolation value to the shader
-            moonDissolve.SetFloat("_Interpolation", currentInterpolation);
-
-            // Wait for the next frame
-            yield return null;
-
-            // Update elapsed time
-            elapsedTime = Time.time - startTime;
-        }
-
-        // Ensure that the _Interpolation value is set to 0 exactly
-        moonDissolve.SetFloat("_Interpolation", 0f);
-    }
-
-
-
-
-
-
     public void followRover1()
     {
         worldScale.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
@@ -436,35 +397,6 @@ public class CircleFollow : MonoBehaviour
             followRover1();
         }
     }
-
-
-
-    public void moonExpand()
-    {
-        openingSound.SetActive(true);
-        StartCoroutine(InterpolateDissolveMoon());
-        moonButton.SetActive(false);
-    }
-
-
-
-    /**public void rotate90()
-    {
-        if (objectToRotate == null)
-        {
-            Debug.LogError("Please assign a GameObject to objectToRotate variable in the Inspector.");
-            return;
-        }
-
-        // Get the current local rotation of the game object
-        Quaternion currentRotation = objectToRotate.transform.localRotation;
-
-        // Calculate the new local rotation by adding a 90-degree rotation around the y-axis
-        Quaternion newRotation = Quaternion.Euler(0f, 90f, 0f) * currentRotation;
-
-        // Apply the new local rotation to the game object
-        objectToRotate.transform.localRotation = newRotation;
-    }**/
 
 
 
