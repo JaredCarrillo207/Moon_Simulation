@@ -74,12 +74,12 @@ public class MoveGameObjectLoop : MonoBehaviour
 
             float time = float.Parse(data[0]);
             float x = float.Parse(data[1]) * positionScaleFactor;
-            float y = float.Parse(data[2]) * positionScaleFactor;
-            float z = float.Parse(data[3]) * positionScaleFactor;
+            float y = float.Parse(data[3]) * positionScaleFactor;
+            float z = float.Parse(data[2]) * positionScaleFactor;
             float rotAngle = float.Parse(data[4]);
             float rotX = float.Parse(data[5]);
-            float rotY = float.Parse(data[6]);
-            float rotZ = float.Parse(data[7]);
+            float rotY = float.Parse(data[7]);
+            float rotZ = float.Parse(data[6]);
 
             Vector3 localPosition = new Vector3(x, y, z);
             Quaternion localRotation = new Quaternion(rotX, rotY, rotZ, rotAngle);

@@ -13,7 +13,7 @@ public class CircleFollow : MonoBehaviour
     public Material dissolveMaterial, rockDissolve, wheelDissolve, chassisDissolve; // Assign the material using the "Custom/CenterOnlyShader" shader in the Inspector
 
     public GameObject Rover1Card, Rover2Card, Rover3Card, Rover4Card, worldScale, baseScale, objectToRotate;
-    public float dissolveInterpolation = 0.02f;
+    public float dissolveInterpolation = 0.3f;
     public float dissolveInterpolation2 = 1.0f;
     public float interpolationDuration = 1.0f;
     public float interpolationDuration2 = 5.0f;
@@ -51,7 +51,7 @@ public class CircleFollow : MonoBehaviour
 
         //worldScale.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
 
-        dissolveInterpolation = 0.02f;
+        //dissolveInterpolation = 1.0f;
 
         targetInterpolation = dissolveInterpolation;
         targetInterpolation2 = dissolveInterpolation2;

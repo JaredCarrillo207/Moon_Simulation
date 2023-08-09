@@ -41,7 +41,7 @@ public class MoveGameObject : MonoBehaviour
         float fractionOfJourney = distanceCovered / journeyLength;
 
         transform.localPosition = Vector3.Lerp(positions[currentPositionIndex], positions[currentPositionIndex + 1], fractionOfJourney);
-        transform.rotation = Quaternion.Lerp(rotations[currentRotationIndex], rotations[currentRotationIndex + 1], fractionOfJourney);
+        transform.localRotation = Quaternion.Lerp(rotations[currentRotationIndex], rotations[currentRotationIndex + 1], fractionOfJourney);
 
         if (fractionOfJourney >= 1.0f)
         {
@@ -68,12 +68,12 @@ public class MoveGameObject : MonoBehaviour
 
             float time = float.Parse(data[0]);
             float x = float.Parse(data[1]) * positionScaleFactor;
-            float y = float.Parse(data[2]) * positionScaleFactor;
-            float z = float.Parse(data[3]) * positionScaleFactor;
+            float y = float.Parse(data[3]) * positionScaleFactor;
+            float z = float.Parse(data[2]) * positionScaleFactor;
             float rotAngle = float.Parse(data[4]);
             float rotX = float.Parse(data[5]);
-            float rotY = float.Parse(data[6]);
-            float rotZ = float.Parse(data[7]);
+            float rotY = float.Parse(data[7]);
+            float rotZ = float.Parse(data[6]);
 
             Vector3 position = new Vector3(x, y, z);
             Quaternion rotation = new Quaternion(rotX, rotY, rotZ, rotAngle);
