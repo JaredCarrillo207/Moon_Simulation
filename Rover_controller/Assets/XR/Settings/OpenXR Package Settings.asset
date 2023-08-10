@@ -388,6 +388,26 @@ MonoBehaviour:
   priority: 0
   required: 0
   ignoreValidationErrors: 0
+--- !u!114 &-362042689566899602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34219f5077d851f448f60c5f0c3568ee, type: 3}
+  m_Name: AzureRemoteRenderingFeature WSA
+  m_EditorClassIdentifier: 
+  m_enabled: 1
+  nameUi: Azure Remote Rendering
+  version: 0.0.1
+  featureIdInternal: com.microsoft.azure.remote-rendering.feature.remote-rendering
+  openxrExtensionStrings: 
+  company: Microsoft
+  priority: 0
+  required: 0
 --- !u!114 &-279732301936654378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -518,6 +538,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   features:
   - {fileID: 134602001171760984}
+  - {fileID: -362042689566899602}
   - {fileID: -6598997709335830552}
   - {fileID: 5561532230143583327}
   - {fileID: 5699780107236295254}

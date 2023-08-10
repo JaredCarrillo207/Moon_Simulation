@@ -62,16 +62,16 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BumpScale: 0.6
+    - _BumpScale: 0
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _Distance: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0.267
+    - _Glossiness: 0.237
     - _GlossyReflections: 1
     - _Height: 1
-    - _Interpolation: 2
+    - _Interpolation: 0.04
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1

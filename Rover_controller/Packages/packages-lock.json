@@ -7,7 +7,7 @@
       "dependencies": {}
     },
     "com.microsoft.azure.remote-rendering": {
-      "version": "file:MixedReality/com.microsoft.azure.remote-rendering-1.1.41.tgz",
+      "version": "file:MixedReality/com.microsoft.azure.remote-rendering-1.2.3.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {}
