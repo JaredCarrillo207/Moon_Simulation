@@ -46,7 +46,7 @@ MonoBehaviour:
   farClipPlaneOpaqueDisplay: 20
   cameraClearFlagsOpaqueDisplay: 2
   backgroundColorOpaqueDisplay: {r: 0, g: 0, b: 0, a: 0}
-  opaqueQualityLevel: 1
+  opaqueQualityLevel: 2
   nearClipPlaneTransparentDisplay: 0.1
   farClipPlaneTransparentDisplay: 20
   cameraClearFlagsTransparentDisplay: 2
