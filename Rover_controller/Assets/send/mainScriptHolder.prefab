@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5003034555445356143
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5003034555445356141}
+  - component: {fileID: 5003034555445356142}
+  - component: {fileID: 5003034555445356140}
+  - component: {fileID: 5003034555445356131}
+  m_Layer: 0
+  m_Name: mainScriptHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5003034555445356141
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5003034555445356143}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.024215877, y: -0.11341724, z: -0.023033261}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5003034555445356142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5003034555445356143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42f34f92e109f7b439acc688c90ed6f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
+  modeSelect: {fileID: 0}
+  terrainSelect: {fileID: 0}
+  rockSelect: {fileID: 0}
+  roverSelect: {fileID: 0}
+  mapBumpy: {fileID: 0}
+  viperRover: {fileID: 995513862508440888, guid: 010cb5f272dc82741a5616f43019fb1a, type: 3}
+  cadreRover: {fileID: 445433175770629144, guid: 604bc714091e96f4fac499aac71fb48e, type: 3}
+--- !u!114 &5003034555445356140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5003034555445356143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc651b6dce4f15f478b2d01004365067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  smallRockPrefab: {fileID: 7763349731630406223, guid: fab84ff1f237f2045b1b5e883a8ec83f, type: 3}
+  mainCamera: {fileID: 0}
+  bigRockPrefab: {fileID: 7140688094906196389, guid: cdcd672f63d1dfe478f2466c07fbb0eb, type: 3}
+  terrain: {fileID: 0}
+  numberOfSmallRocks: 20
+  numberOfBigRocks: 10
+  sourceScriptReference: {fileID: 0}
+  valueFromSource: 20
+--- !u!114 &5003034555445356131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5003034555445356143}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17fb6bfc65d59c8449f3a41f8a5abdc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moonLand: {fileID: 0}
+  rockPrefabs:
+  - {fileID: 7140688094906196389, guid: cdcd672f63d1dfe478f2466c07fbb0eb, type: 3}
+  - {fileID: 7763349731630406223, guid: fab84ff1f237f2045b1b5e883a8ec83f, type: 3}
+  valueFromSource: 0.27

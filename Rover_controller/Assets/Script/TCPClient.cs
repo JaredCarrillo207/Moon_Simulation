@@ -7,15 +7,22 @@ using UnityEngine;
 
 public class TCPClient : MonoBehaviour
 {
-    public string host = "192.168.50.251"; // Replace with the server's IP address
-    public int port = 55555; // Replace with the server's port number
-    public int bufferSize = 32; // Adjust the buffer size to accommodate the data size
+    // Server details
+    public string serverIP = "127.0.0.1";
+    public int serverPort = 5000;
 
+    // TCP client variables
     private TcpClient client;
     private NetworkStream stream;
-    private Thread receiveThread;
+    private byte[] receiveBuffer = new byte[4096]; // Adjust the buffer size based on your needs
 
-    private bool isReceiving = false;
+    // Threading variables
+    private Thread receiveThread;
+    private bool isRunning = false;
+
+    // Events to notify data reception and connection status changes
+    public event Action<string> OnDataReceived;
+    public event Action<bool> OnConnected;
 
     private void Start()
     {
@@ -27,101 +34,91 @@ public class TCPClient : MonoBehaviour
         DisconnectFromServer();
     }
 
-    private void ConnectToServer()
+    // Add this method to handle received data and print it to the debug log
+    private void HandleReceivedData(string receivedData)
+    {
+        Debug.Log($"Received message from server: {receivedData}");
+        // You can do further processing or UI updates with the received data here.
+    }
+
+    public void ConnectToServer()
     {
         try
         {
             client = new TcpClient();
-            client.Connect(host, port);
+            client.Connect(IPAddress.Parse(serverIP), serverPort);
             stream = client.GetStream();
-            isReceiving = true;
+            isRunning = true;
+            OnConnected?.Invoke(true);
 
+            // Register the event handler for data reception
+            OnDataReceived += HandleReceivedData;
+
+            // Start the receiving thread
             receiveThread = new Thread(ReceiveData);
             receiveThread.Start();
         }
         catch (Exception e)
         {
             Debug.LogError($"Error connecting to server: {e.Message}");
+            OnConnected?.Invoke(false);
         }
     }
 
-    private void DisconnectFromServer()
+    public void DisconnectFromServer()
     {
-        isReceiving = false;
-        if (receiveThread != null && receiveThread.IsAlive)
+        if (isRunning)
         {
-            receiveThread.Join();
+            isRunning = false;
+
+            if (stream != null)
+                stream.Close();
+
+            if (client != null)
+                client.Close();
+
+            receiveThread?.Join(500); // Wait for the receiving thread to finish for up to 500 milliseconds
+            OnConnected?.Invoke(false);
+        }
+    }
+
+    public void SendData(string message)
+    {
+        if (!isRunning)
+        {
+            Debug.LogWarning("TCP client is not connected.");
+            return;
         }
 
-        if (stream != null)
+        try
         {
-            stream.Close();
+            byte[] data = Encoding.UTF8.GetBytes(message);
+            stream.Write(data, 0, data.Length);
         }
-
-        if (client != null)
+        catch (Exception e)
         {
-            client.Close();
+            Debug.LogError($"Error sending data: {e.Message}");
+            DisconnectFromServer();
         }
     }
 
     private void ReceiveData()
     {
-        byte[] buffer = new byte[bufferSize];
-        StringBuilder receivedDataBuilder = new StringBuilder();
-
-        while (isReceiving)
+        while (isRunning)
         {
             try
             {
-                int bytesRead = stream.Read(buffer, 0, bufferSize);
+                int bytesRead = stream.Read(receiveBuffer, 0, receiveBuffer.Length);
                 if (bytesRead > 0)
                 {
-                    string receivedData = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                    receivedDataBuilder.Append(receivedData);
-
-                    // Check if the message is complete (ends with a newline character)
-                    if (receivedData.EndsWith("\n"))
-                    {
-                        receivedData = receivedDataBuilder.ToString().Trim();
-                        receivedDataBuilder.Clear();
-
-                        Debug.Log("Received from server: " + receivedData);
-
-                        // Parse the comma-separated string
-                        string[] dataParts = receivedData.Split(',');
-                        if (dataParts.Length == 8)
-                        {
-                            if (float.TryParse(dataParts[0], out float elapsed_time) &&
-                                float.TryParse(dataParts[1], out float position_x) &&
-                                float.TryParse(dataParts[2], out float position_y) &&
-                                float.TryParse(dataParts[3], out float position_z) &&
-                                float.TryParse(dataParts[4], out float rotation_r) &&
-                                float.TryParse(dataParts[5], out float rotation_x) &&
-                                float.TryParse(dataParts[6], out float rotation_y) &&
-                                float.TryParse(dataParts[7], out float rotation_z))
-                            {
-                                Debug.Log("Elapsed Time: " + elapsed_time);
-                                Debug.Log("Position: " + position_x + ", " + position_y + ", " + position_z);
-                                Debug.Log("Rotation: " + rotation_r + ", " + rotation_x + ", " + rotation_y + ", " + rotation_z);
-                                // Process the received data as needed.
-                            }
-                            else
-                            {
-                                Debug.LogError("Invalid data format received.");
-                            }
-                        }
-                        else
-                        {
-                            Debug.LogError("Invalid data format received.");
-                        }
-                    }
+                    string receivedData = Encoding.UTF8.GetString(receiveBuffer, 0, bytesRead);
+                    OnDataReceived?.Invoke(receivedData);
                 }
             }
             catch (Exception e)
             {
                 Debug.LogError($"Error receiving data: {e.Message}");
                 DisconnectFromServer();
-                break;
             }
         }
     }
